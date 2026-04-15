@@ -335,26 +335,31 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public boolean sendComment(int videoId, int userId, String text, float time, Integer parentId) {
+        return sendCommentAndGetId(videoId, userId, text, time, parentId) > 0;
+    }
+
+    @Override
+    public int sendCommentAndGetId(int videoId, int userId, String text, float time, Integer parentId) {
         try {
             if (text == null || text.trim().isEmpty()) {
                 System.out.println("内容为空");
-                return false;
+                return 0;
             }
             if (text.length() > Constants.MAXCOMMENTLENGTH) {
                 System.out.println("内容太长");
-                return false;
+                return 0;
             }
-            int result = videoDao.sendComment(videoId, userId, text.trim(), time, parentId);
-            if (result > 0) {
+            int commentId = videoDao.sendComment(videoId, userId, text.trim(), time, parentId);
+            if (commentId > 0) {
                 System.out.println("评论成功" + videoId + "用户id为" + userId);
             } else {
                 System.out.println("评论失败" + videoId);
             }
-            return result > 0;
+            return commentId;
         } catch (Exception e) {
             System.err.println("发送评论失败" + e.getMessage());
             e.printStackTrace();
-            return false;
+            return 0;
         }
     }
 
@@ -366,7 +371,8 @@ public class VideoServiceImpl implements VideoService {
                 System.out.println("评论id不存在" + commentId);
                 return false;
             }
-            if (comment.getUserId() != userId) {
+            boolean isAdmin = isAdminUser(userId);
+            if (!isAdmin && comment.getUserId() != userId) {
                 Video video = videoDao.getVideoById(comment.getVideoId());
                 if (video == null) {
                     System.out.println("视频id不存在" + commentId);
@@ -455,6 +461,28 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
+    public List<Video> getUserLikedVideos(int userId, int page, int pageSize) {
+        try {
+            LikeDao likeDao = new LikeDaoImpl();
+            return likeDao.getLikesByUserId(userId, page, pageSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public int getUserLikeCount(int userId) {
+        try {
+            LikeDao likeDao = new LikeDaoImpl();
+            return likeDao.countUserLikes(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
     public List<ScreenComment> getVideoComments(int videoId) {
         try {
             Video video = videoDao.getVideoById(videoId);
@@ -535,8 +563,9 @@ public class VideoServiceImpl implements VideoService {
             if (reply == null) {
                 return false;
             }
+            boolean isAdmin = isAdminUser(userId);
             //回复作者本人或视频作者可以删除
-            if (!reply.getUserId().equals(userId)) {
+            if (!isAdmin && !reply.getUserId().equals(userId)) {
                 // 如果不是回复作者，需要检查是否是视频作者
                 Video video = videoDao.getVideoById(videoId);
                 if (video == null || !video.getAuthorId().equals(userId)) {
@@ -573,7 +602,8 @@ public class VideoServiceImpl implements VideoService {
             if (reply2 == null) {
                 return false;
             }
-            if (!reply2.getUserId().equals(userId)) {
+            boolean isAdmin = isAdminUser(userId);
+            if (!isAdmin && !reply2.getUserId().equals(userId)) {
                 Video video = videoDao.getVideoById(videoId);
                 if (video == null || !video.getAuthorId().equals(userId)) {
                     return false;
@@ -585,6 +615,17 @@ public class VideoServiceImpl implements VideoService {
                 return true;
             }
             return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean isAdminUser(int userId) {
+        try {
+            UserDao userDao = new UserDaoImpl();
+            com.assessment.www.po.User user = userDao.getUserById(userId);
+            return user != null && Constants.ROLEADMIN.equals(user.getRole());
         } catch (Exception e) {
             e.printStackTrace();
             return false;

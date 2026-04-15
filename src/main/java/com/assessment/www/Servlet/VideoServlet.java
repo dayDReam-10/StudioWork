@@ -586,8 +586,9 @@ public class VideoServlet extends HttpServlet {
         }
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        if (videoService.sendComment(videoId, user.getId(), content, time, parentId)) {
-            response.getWriter().write("{\"success\":true,\"message\":\"发送成功\"}");
+        int commentId = videoService.sendCommentAndGetId(videoId, user.getId(), content, time, parentId);
+        if (commentId > 0) {
+            response.getWriter().write("{\"success\":true,\"message\":\"发送成功\",\"commentId\":" + commentId + "}");
         } else {
             response.getWriter().write("{\"success\":false,\"message\":\"发送失败\"}");
         }

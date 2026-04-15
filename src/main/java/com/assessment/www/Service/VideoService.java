@@ -63,6 +63,9 @@ public interface VideoService {
     // 发送弹幕
     boolean sendComment(int videoId, int userId, String text, float time, Integer parentId);
 
+    // 发送评论并返回评论ID，失败返回0
+    int sendCommentAndGetId(int videoId, int userId, String text, float time, Integer parentId);
+
     // 删除弹幕
     boolean deleteComment(int commentId, int userId);
 
@@ -89,6 +92,12 @@ public interface VideoService {
 
     // 获取用户收藏视频总数
     int getUserFavoriteCount(int userId);
+
+    // 获取用户点赞的视频
+    List<Video> getUserLikedVideos(int userId, int page, int pageSize);
+
+    // 获取用户点赞视频总数
+    int getUserLikeCount(int userId);
 
     // 获取视频弹幕
     List<com.assessment.www.po.ScreenComment> getVideoComments(int videoId);

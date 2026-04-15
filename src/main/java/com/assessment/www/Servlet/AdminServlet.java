@@ -458,7 +458,7 @@ public class AdminServlet extends HttpServlet {
     }
 
     private void exportUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {
+        try {//导出user表数据为csv文件
             List<User> users = userService.getUserList(1, 10000);
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=\"users_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv\"");
@@ -524,7 +524,7 @@ public class AdminServlet extends HttpServlet {
         List<Report> reports = reportService.getAllReports(page, Constants.PAGESIZE);
         int totalReports = reportService.getTotalReportCount();
         // 搜索条件
-        if (search != null && !search.trim().isEmpty()) {
+        if (search != null && !search.trim().isEmpty()) {//trim去掉前后空格 判断是否为空
             List<Report> filteredReports = new ArrayList<>();
             for (Report report : reports) {
                 boolean match = false;

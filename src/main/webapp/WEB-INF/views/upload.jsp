@@ -11,28 +11,188 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>上传视频 - LiBiLiBi</title>
     <style>
-        :root { --blue:#00aeec; --pink:#fb7299; --line:#e3e5e7; --bg:#f6f7f8; --sub:#61666d; }
-        * { box-sizing: border-box; }
-        body { margin:0; font-family:"Segoe UI",sans-serif; background:var(--bg); color:#18191c; }
-        .header { height:68px; background:#fff; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:0 24px; }
-        .logo { color:var(--blue); text-decoration:none; font-size:24px; font-weight:800; }
-        .nav a { color:var(--sub); text-decoration:none; margin-left:12px; font-size:14px; }
-        .nav a:hover { color:var(--blue); }
-        .main { width:min(900px,100%); margin:26px auto; padding:0 20px; }
-        .card { background:#fff; border-radius:12px; padding:24px; box-shadow:0 8px 24px rgba(0,0,0,.06); }
-        h1 { margin:0 0 18px; font-size:24px; }
-        .msg { border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:14px; }
-        .msg.error { background:#fff2f4; border:1px solid #ffd7e2; color:#d63b6f; }
-        .msg.success { background:#ecfbff; border:1px solid #bcefff; color:#0077a5; }
-        .field { margin-bottom:14px; }
-        .field label { display:block; margin-bottom:6px; color:var(--sub); font-size:13px; }
-        .field input[type="text"], .field textarea, .field input[type="file"] {
-            width:100%; border:1px solid var(--line); border-radius:8px; padding:10px 12px; outline:none; font-size:14px; font-family:inherit;
+        :root {
+            --ink: #1f2a37;
+            --sub: #5f6b7a;
+            --sub2: #8a94a3;
+            --line: rgba(31, 42, 55, 0.1);
+            --paper: rgba(255, 252, 246, 0.86);
+            --panel: rgba(255, 255, 255, 0.9);
+            --gold: #b18135;
+            --teal: #2d6c8b;
+            --danger: #c44762;
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-pill: 999px;
+            --shadow-soft: 0 10px 30px rgba(24, 36, 56, 0.08);
+            --shadow-panel: 0 16px 34px rgba(16, 26, 40, 0.12);
         }
-        .field textarea { min-height:110px; resize:vertical; }
-        .field input:focus, .field textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,174,236,.12); }
-        .btn { width:100%; height:46px; border:none; border-radius:10px; background:linear-gradient(90deg,var(--blue),#22c7ff); color:#fff; font-size:15px; font-weight:700; cursor:pointer; }
-        .tip { margin-top:10px; color:#9499a0; font-size:12px; }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--ink);
+            background: transparent;
+        }
+
+        .header {
+            width: min(1480px, calc(100% - 48px));
+            height: 76px;
+            margin: 16px auto 0;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border-radius: 24px;
+            background: var(--paper);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(14px) saturate(130%);
+            -webkit-backdrop-filter: blur(14px) saturate(130%);
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+        }
+
+        .logo {
+            text-decoration: none;
+            font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            background: linear-gradient(120deg, var(--gold) 0%, #c89d4f 45%, var(--teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: var(--sub);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: var(--radius-pill);
+            transition: all 0.2s ease;
+        }
+
+        .nav a:hover {
+            color: var(--teal);
+            background: rgba(45, 108, 139, 0.09);
+        }
+
+        .main {
+            width: min(980px, calc(100% - 24px));
+            margin: 28px auto 36px;
+        }
+
+        .card {
+            background: var(--panel);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.84);
+            box-shadow: var(--shadow-panel);
+            padding: 24px;
+        }
+
+        h1 {
+            margin: 0 0 18px;
+            font-size: 30px;
+            font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+        }
+
+        .msg {
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .msg.error {
+            background: rgba(196, 71, 98, 0.1);
+            border: 1px solid rgba(196, 71, 98, 0.28);
+            color: var(--danger);
+        }
+
+        .msg.success {
+            background: rgba(45, 108, 139, 0.12);
+            border: 1px solid rgba(45, 108, 139, 0.26);
+            color: var(--teal);
+        }
+
+        .field { margin-bottom: 14px; }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--sub);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .field input[type="text"],
+        .field textarea,
+        .field input[type="file"] {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .field textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .field input:focus,
+        .field textarea:focus {
+            border-color: rgba(45, 108, 139, 0.45);
+            box-shadow: 0 0 0 4px rgba(45, 108, 139, 0.13);
+        }
+
+        .btn {
+            width: 100%;
+            height: 46px;
+            border: none;
+            border-radius: var(--radius-md);
+            background: linear-gradient(120deg, var(--teal), #3a86a9);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 12px 22px rgba(45, 108, 139, 0.24);
+        }
+
+        .tip {
+            margin-top: 10px;
+            color: var(--sub2);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 980px) {
+            .header {
+                width: calc(100% - 28px);
+                height: auto;
+                padding: 14px 16px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/libilibi-bg.css">
 </head>

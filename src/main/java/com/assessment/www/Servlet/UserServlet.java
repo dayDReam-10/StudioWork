@@ -58,6 +58,9 @@ public class UserServlet extends HttpServlet {
             case "/favorites":
                 showFavorites(request, response);
                 break;
+            case "/likes":
+                showLikes(request, response);
+                break;
             case "/":
                 response.sendRedirect(request.getContextPath() + "/");
                 break;
@@ -466,6 +469,42 @@ public class UserServlet extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.getRequestDispatcher("/WEB-INF/views/favorites.jsp").forward(request, response);
+    }
+
+    // 显示我的点赞
+    private void showLikes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/user/login");
+            return;
+        }
+
+        int page = 1;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+        } catch (NumberFormatException ignored) {
+            page = 1;
+        }
+
+        int pageSize = 12;
+        int totalCount = videoService.getUserLikeCount(user.getId());
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+        if (totalPages <= 0) {
+            totalPages = 1;
+        }
+        if (page > totalPages) {
+            page = totalPages;
+        }
+
+        List<Video> likedVideos = videoService.getUserLikedVideos(user.getId(), page, pageSize);
+        request.setAttribute("likedVideos", likedVideos);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.getRequestDispatcher("/WEB-INF/views/likes.jsp").forward(request, response);
     }
 
     //显示用户资料页面

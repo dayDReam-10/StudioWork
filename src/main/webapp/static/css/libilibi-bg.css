@@ -1,35 +1,61 @@
-/* Unified background scene for all pages */
+﻿/* Premium luminous background atmosphere */
 .bg-scene {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-        linear-gradient(120deg, rgba(4, 12, 22, 0.24) 0%, rgba(4, 12, 22, 0.08) 42%, rgba(8, 26, 46, 0.16) 100%),
-        url("../images/background/default.jpg");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    filter: saturate(1.1) contrast(1.06);
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(194, 152, 76, 0.16) 0%, transparent 42%),
+    radial-gradient(circle at 88% 8%, rgba(40, 111, 144, 0.16) 0%, transparent 44%),
+    linear-gradient(145deg, #f6efe2 0%, #edf4f9 48%, #fbf3e8 100%);
+}
+
+.bg-scene::before {
+  content: "";
+  position: absolute;
+  inset: -28%;
+  background:
+    radial-gradient(circle at 30% 36%, rgba(177, 129, 53, 0.2) 0%, transparent 54%),
+    radial-gradient(circle at 76% 60%, rgba(45, 108, 139, 0.2) 0%, transparent 56%);
+  filter: blur(36px);
+  animation: bg-wave 20s ease-in-out infinite alternate;
 }
 
 .bg-scene::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 18% 14%, rgba(0, 174, 236, 0.18), transparent 34%),
-        radial-gradient(circle at 88% 84%, rgba(251, 114, 153, 0.16), transparent 36%),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 0%, rgba(246, 247, 248, 0.28) 62%, rgba(246, 247, 248, 0.45) 100%);
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.48) 1px, transparent 1px),
+    linear-gradient(30deg, rgba(255, 255, 255, 0.35) 1px, transparent 1px);
+  background-size: 28px 28px, 34px 34px;
+  opacity: 0.22;
+}
+
+@keyframes bg-wave {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-3.5%, 2.8%, 0) scale(1.06); }
 }
 
 body > *:not(.bg-scene) {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
-@media (max-width: 820px) {
-    .bg-scene {
-        background-position: center top;
-    }
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(177, 129, 53, 0.62) 0%, rgba(45, 108, 139, 0.62) 100%);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(177, 129, 53, 0.82) 0%, rgba(45, 108, 139, 0.82) 100%);
 }

@@ -305,9 +305,15 @@ public class VideoDaoImpl implements VideoDao {
                 ps.setObject(6, parentId);
                 int row = ps.executeUpdate();
                 if (row > 0) {
+                    int commentId = 0;
+                    try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            commentId = generatedKeys.getInt(1);
+                        }
+                    }
                     updateVideoCounts(videoId, "comment", 1);
                     conn.commit();
-                    return row;
+                    return commentId > 0 ? commentId : row;
                 }
                 conn.rollback();
                 return 0;

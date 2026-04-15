@@ -15,102 +15,426 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>视频详情 - LiBiLiBi</title>
     <style>
-        :root { --blue:#00aeec; --pink:#fb7299; --line:#e3e5e7; --bg:#f6f7f8; --sub:#61666d; }
+        :root {
+            --ink: #1f2a37;
+            --sub: #5f6b7a;
+            --sub2: #8a94a3;
+            --line: rgba(31, 42, 55, 0.1);
+            --paper: rgba(255, 252, 246, 0.86);
+            --panel: rgba(255, 255, 255, 0.9);
+            --gold: #b18135;
+            --teal: #2d6c8b;
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-pill: 999px;
+            --shadow-soft: 0 10px 30px rgba(24, 36, 56, 0.08);
+            --shadow-panel: 0 16px 34px rgba(16, 26, 40, 0.12);
+            --shadow-hover: 0 20px 40px rgba(18, 28, 45, 0.14);
+            --danger: #c44762;
+        }
+
         * { box-sizing: border-box; }
-        body { margin:0; font-family:"Segoe UI",sans-serif; color:#18191c; background:var(--bg); }
-        .header { height:68px; background:#fff; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:0 24px; position:sticky; top:0; z-index:100; }
-        .logo { color:var(--blue); text-decoration:none; font-size:24px; font-weight:800; }
-        .nav a { text-decoration:none; color:var(--sub); margin-left:12px; font-size:14px; }
-        .nav .upload { background:var(--pink); color:#fff; padding:8px 12px; border-radius:8px; font-weight:700; }
-        .main { width:min(1300px,100%); margin:20px auto; padding:0 20px; display:grid; grid-template-columns:1fr 340px; gap:18px; }
-        .panel { background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.05); }
-        .video-panel { padding:16px; }
-        .player { width:100%; aspect-ratio:16/9; border-radius:10px; background:#000; overflow:hidden; margin-bottom:14px; position:relative; }
-        .player video { width:100%; height:100%; position:relative; z-index:1; }
-        .danmu-layer { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
+
+        body {
+            margin: 0;
+            font-family: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--ink);
+            background: transparent;
+        }
+
+        .header {
+            width: min(1480px, calc(100% - 48px));
+            height: 76px;
+            margin: 16px auto 0;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+            border-radius: 24px;
+            background: var(--paper);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(14px) saturate(130%);
+            -webkit-backdrop-filter: blur(14px) saturate(130%);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .logo {
+            text-decoration: none;
+            font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            background: linear-gradient(120deg, var(--gold) 0%, #c89d4f 45%, var(--teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--sub);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: var(--radius-pill);
+            transition: all 0.2s ease;
+        }
+
+        .nav a:hover {
+            color: var(--teal);
+            background: rgba(45, 108, 139, 0.09);
+        }
+
+        .nav .upload {
+            color: #fff;
+            font-weight: 700;
+            background: linear-gradient(120deg, var(--gold) 0%, #c89d4f 100%);
+            box-shadow: 0 10px 20px rgba(177, 129, 53, 0.3);
+            padding: 9px 16px;
+        }
+
+        .main {
+            width: min(1480px, calc(100% - 56px));
+            margin: 28px auto 44px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.84);
+            box-shadow: var(--shadow-panel);
+        }
+
+        .video-panel { padding: 18px; }
+
+        .player {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 14px;
+            background: #000;
+            overflow: hidden;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .player video { width: 100%; height: 100%; position: relative; z-index: 1; }
+
+        .danmu-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
+
         .danmu-item {
-            position:absolute;
-            left:0;
-            white-space:nowrap;
-            color:#fff;
-            font-size:18px;
-            font-weight:700;
-            text-shadow:0 1px 2px rgba(0,0,0,.8), 0 0 4px rgba(0,0,0,.6);
+            position: absolute;
+            left: 0;
+            white-space: nowrap;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 0, 0, 0.6);
             will-change: transform;
         }
-        @keyframes danmu-move {
-            from { transform:translateX(0); }
-            to { transform:translateX(calc(-1 * var(--danmu-distance, 1200px))); }
+
+        .danmu-item.deletable { pointer-events: auto; cursor: pointer; }
+
+        .danmu-item.deletable:hover {
+            color: #ffe2e2;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 8px rgba(255, 120, 120, 0.75);
         }
-        .title { margin:0 0 8px; font-size:24px; }
-        .desc { margin:0 0 10px; color:#61666d; line-height:1.6; white-space:pre-wrap; }
-        .stats { display:flex; gap:14px; color:#9499a0; font-size:13px; margin-bottom:12px; flex-wrap:wrap; }
-        .actions { display:flex; gap:8px; flex-wrap:wrap; }
-        .btn { border:none; border-radius:8px; height:36px; padding:0 14px; cursor:pointer; font-weight:700; }
-        .btn.blue { background:#ecfbff; color:#0077a5; }
-        .btn.pink { background:#fff2f4; color:#d63b6f; }
-        .btn.gray { background:#eef1f4; color:#333; }
-        .btn.green { background:#eaf9ef; color:#207f49; }
-        .danmu-input { display:flex; gap:8px; margin-top:12px; }
-        .danmu-input input { flex:1; height:40px; border:1px solid var(--line); border-radius:8px; padding:0 10px; outline:none; }
-        .danmu-input button { width:110px; border:none; border-radius:8px; background:#ff7a45; color:#fff; font-weight:700; cursor:pointer; }
-        .danmu-tip { color:#9499a0; font-size:12px; margin-top:6px; }
 
-        .side { padding:16px; }
-        .author { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-        .avatar { width:46px; height:46px; border-radius:50%; object-fit:cover; background:#e9edf1; }
-        .author-name { font-size:16px; font-weight:700; margin:0; }
-        .author-sub { font-size:12px; color:#9499a0; }
-        .follow { width:100%; height:36px; border:none; border-radius:8px; background:var(--blue); color:#fff; font-weight:700; cursor:pointer; margin-bottom:12px; }
-        .side-box { border:1px solid var(--line); border-radius:10px; padding:10px; color:#61666d; font-size:13px; }
+        @keyframes danmu-move {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-1 * var(--danmu-distance, 1200px))); }
+        }
 
-        .comment-panel { margin-top:14px; padding:16px; }
-        .comment-title { margin:0 0 10px; font-size:18px; }
-        .comment-input { display:flex; gap:8px; margin-bottom:12px; }
-        .comment-input input { flex:1; height:40px; border:1px solid var(--line); border-radius:8px; padding:0 10px; outline:none; }
-        .comment-input button { width:110px; border:none; border-radius:8px; background:var(--blue); color:#fff; font-weight:700; cursor:pointer; }
-        .comment-item { border-top:1px solid #f1f2f3; padding:12px 0; }
-        .comment-user { font-size:14px; font-weight:700; margin-bottom:4px; }
-        .comment-text { font-size:14px; line-height:1.6; margin-bottom:6px; white-space:pre-wrap; }
-        .comment-time { font-size:12px; color:#9499a0; }
-        .comment-actions { margin-top:6px; }
-        .comment-actions button { border:none; border-radius:6px; background:#eef1f4; padding:4px 8px; font-size:12px; cursor:pointer; margin-right:6px; }
-        .empty { color:#9499a0; font-size:14px; padding:16px 0; }
+        .title {
+            margin: 0 0 10px;
+            font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+            font-size: clamp(26px, 3.2vw, 38px);
+            line-height: 1.25;
+            color: var(--ink);
+        }
+
+        .desc {
+            margin: 0 0 14px;
+            color: var(--sub);
+            line-height: 1.7;
+            white-space: pre-wrap;
+            font-size: 15px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 8px;
+            color: var(--sub);
+            font-size: 13px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .stats span {
+            background: rgba(45, 108, 139, 0.08);
+            padding: 6px 10px;
+            border-radius: var(--radius-pill);
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: var(--radius-md);
+            height: 38px;
+            padding: 0 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover { transform: translateY(-1px); }
+
+        .btn.blue { color: #fff; background: linear-gradient(120deg, var(--teal), #3a86a9); }
+        .btn.pink { color: #fff; background: linear-gradient(120deg, #c44762, #e86f88); }
+        .btn.gray { background: rgba(31, 42, 55, 0.08); color: var(--ink); }
+        .btn.green { color: #1c7f4e; background: rgba(40, 170, 104, 0.16); }
+        .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+        .danmu-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .danmu-input input,
+        .comment-input input,
+        .modal-input {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .danmu-input input,
+        .comment-input input {
+            flex: 1;
+            height: 40px;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+
+        .danmu-input input:focus,
+        .comment-input input:focus,
+        .modal-input:focus {
+            border-color: rgba(45, 108, 139, 0.45);
+            box-shadow: 0 0 0 4px rgba(45, 108, 139, 0.13);
+        }
+
+        .danmu-input button,
+        .comment-input button,
+        .modal-btn.ok {
+            border: none;
+            border-radius: var(--radius-md);
+            background: linear-gradient(120deg, var(--teal), #3a86a9);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .danmu-input button,
+        .comment-input button { width: 110px; }
+
+        .danmu-tip {
+            color: var(--sub2);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .danmu-manage {
+            margin-top: 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .danmu-manage-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--sub);
+            margin-bottom: 8px;
+        }
+
+        .danmu-manage-list {
+            max-height: 180px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .danmu-manage-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: space-between;
+            border: 1px solid rgba(31, 42, 55, 0.08);
+            border-radius: 8px;
+            background: #fff;
+            padding: 6px 8px;
+        }
+
+        .danmu-manage-meta { min-width: 0; flex: 1; display: flex; align-items: center; gap: 8px; }
+        .danmu-manage-time { color: var(--sub2); font-size: 12px; flex: 0 0 auto; }
+        .danmu-manage-text { font-size: 12px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .danmu-manage-del {
+            border: none;
+            border-radius: 8px;
+            background: rgba(196, 71, 98, 0.12);
+            color: var(--danger);
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .side { padding: 16px; height: fit-content; }
+
+        .author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e9edf1;
+        }
+
+        .author-name { font-size: 17px; font-weight: 700; margin: 0; }
+        .author-sub { font-size: 12px; color: var(--sub2); }
+
+        .follow {
+            width: 100%;
+            height: 38px;
+            border: none;
+            border-radius: var(--radius-md);
+            background: linear-gradient(120deg, var(--gold), #c89d4f);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .side-box {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            color: var(--sub);
+            font-size: 13px;
+            line-height: 1.7;
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        .comment-panel {
+            margin-top: 14px;
+            padding: 16px;
+        }
+
+        .comment-title {
+            margin: 0 0 12px;
+            font-size: 20px;
+            font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .comment-item {
+            border-top: 1px solid rgba(31, 42, 55, 0.08);
+            padding: 12px 0;
+        }
+
+        .comment-user { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .comment-text { font-size: 14px; line-height: 1.7; margin-bottom: 6px; white-space: pre-wrap; color: var(--ink); }
+        .comment-time { font-size: 12px; color: var(--sub2); }
+        .comment-actions { margin-top: 8px; }
+
+        .comment-actions button {
+            border: none;
+            border-radius: 8px;
+            background: rgba(31, 42, 55, 0.08);
+            color: var(--sub);
+            padding: 4px 9px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+
+        .empty { color: var(--sub2); font-size: 14px; padding: 16px 0; }
+        .back-link {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .back-link:hover { text-decoration: underline; }
+
         .modal-mask {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(12, 19, 30, 0.45);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 16px;
         }
+
         .modal-mask.show { display: flex; }
+
         .modal-card {
-            width: min(420px, 100%);
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+            width: min(430px, 100%);
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 16px;
+            box-shadow: 0 20px 44px rgba(8, 14, 24, 0.24);
             padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.84);
         }
+
         .modal-title { margin: 0 0 8px; font-size: 18px; }
-        .modal-msg { margin: 0 0 12px; color: #61666d; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+        .modal-msg { margin: 0 0 12px; color: var(--sub); font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+
         .modal-input {
             width: 100%;
             height: 38px;
-            border: 1px solid var(--line);
-            border-radius: 8px;
             padding: 0 10px;
-            outline: none;
             margin-bottom: 12px;
             font-size: 14px;
         }
-        .modal-input:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(0, 174, 236, 0.12);
-        }
+
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
         .modal-btn {
             border: none;
             height: 34px;
@@ -119,8 +443,9 @@
             cursor: pointer;
             font-weight: 700;
         }
-        .modal-btn.cancel { background: #eef1f4; color: #333; }
-        .modal-btn.ok { background: var(--blue); color: #fff; }
+
+        .modal-btn.cancel { background: rgba(31, 42, 55, 0.08); color: var(--ink); }
+
         .toast {
             position: fixed;
             left: 50%;
@@ -136,14 +461,28 @@
             transition: all .2s ease;
             z-index: 1100;
         }
+
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-        .toast.err { background: rgba(214, 59, 111, 0.95); }
-        @media (max-width:980px) {
-            .main { grid-template-columns:1fr; padding:0 12px; }
-            .header { padding:0 12px; }
+
+        .toast.err { background: rgba(196, 71, 98, 0.95); }
+
+        @media (max-width: 1120px) {
+            .header {
+                width: calc(100% - 28px);
+                height: auto;
+                padding: 14px 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .main {
+                width: calc(100% - 24px);
+                grid-template-columns: 1fr;
+                margin: 22px auto 34px;
+            }
         }
     </style>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/libilibi-bg.css">
@@ -184,7 +523,7 @@
 <main class="main">
     <section class="panel video-panel">
         <h2>视频不存在。</h2>
-        <a href="${pageContext.request.contextPath}/" style="color:#00aeec;text-decoration:none;">返回首页</a>
+        <a class="back-link" href="${pageContext.request.contextPath}/">返回首页</a>
     </section>
 </main>
 <% } else { %>
@@ -222,7 +561,11 @@
                 <input id="danmuInput" type="text" maxlength="300" placeholder="发一条弹幕（记录当前播放时间）...">
                 <button onclick="sendDanmu(<%= video.getId() %>)">发弹幕</button>
             </div>
-            <div class="danmu-tip">按视频当前进度发送，支持回车快捷发送。</div>
+            <div class="danmu-tip">按视频当前进度发送，支持回车快捷发送。点击自己的弹幕可直接删除。</div>
+            <div id="danmuManagePanel" class="danmu-manage" style="display:none;">
+                <div class="danmu-manage-title">可删除弹幕（含历史）</div>
+                <div id="danmuManageList" class="danmu-manage-list"></div>
+            </div>
             <% } else { %>
             <div class="danmu-tip">登录后可发送弹幕。</div>
             <% } %>
@@ -316,7 +659,7 @@
                     }
                     firstDanmu = false;
         %>
-        { id: <%= danmu.getId() %>, time: <%= String.format(java.util.Locale.US, "%.2f", danmuTime) %>, text: "<%= danmuText %>" }
+        { id: <%= danmu.getId() %>, time: <%= String.format(java.util.Locale.US, "%.2f", danmuTime) %>, text: "<%= danmuText %>", canDelete: <%= currentUser != null && ("admin".equals(currentUser.getRole()) || (currentUser.getId() != null && currentUser.getId().equals(danmu.getUserId())) || (video.getAuthorId() != null && currentUser.getId() != null && currentUser.getId().equals(video.getAuthorId()))) %> }
         <%
                 }
             }
@@ -329,6 +672,7 @@
     var danmuTimer = null;
     var danmuEmitted = {};
     var danmuLaneCursor = 0;
+    var danmuManageList = null;
 
     function getDanmuTop() {
         if (!danmuLayer) return 10;
@@ -339,12 +683,30 @@
         return 8 + lane * laneHeight;
     }
 
+    function setDanmuAnimationPlayState(state) {
+        if (!danmuLayer) return;
+        var nodes = danmuLayer.querySelectorAll(".danmu-item");
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].style.animationPlayState = state;
+        }
+    }
+
     function renderDanmuItem(item) {
         if (!danmuLayer || !item || !item.text) return;
         var node = document.createElement("span");
         node.className = "danmu-item";
         node.textContent = item.text;
         node.style.top = getDanmuTop() + "px";
+
+        if (item.canDelete) {
+            node.classList.add("deletable");
+            node.title = "点击删除弹幕";
+            node.setAttribute("data-comment-id", String(item.id));
+            node.addEventListener("click", function (e) {
+                e.stopPropagation();
+                deleteDanmu(item.id);
+            });
+        }
 
         var layerWidth = danmuLayer.clientWidth || danmuLayer.offsetWidth || 0;
         node.style.left = layerWidth + "px";
@@ -354,6 +716,9 @@
         var travelDistance = layerWidth + node.offsetWidth + 24;
         node.style.setProperty("--danmu-distance", travelDistance + "px");
         node.style.animation = "danmu-move 6s linear forwards";
+        if (danmuVideo && danmuVideo.paused) {
+            node.style.animationPlayState = "paused";
+        }
 
         node.addEventListener("animationend", function () {
             if (node.parentNode) {
@@ -366,6 +731,81 @@
         if (!danmuLayer) return;
         while (danmuLayer.firstChild) {
             danmuLayer.removeChild(danmuLayer.firstChild);
+        }
+    }
+
+    function removeDanmuById(commentId) {
+        var cid = String(commentId);
+        danmuItems = danmuItems.filter(function (item) {
+            return String(item.id) !== cid;
+        });
+        delete danmuEmitted[cid];
+        if (!danmuLayer) return;
+        var nodes = danmuLayer.querySelectorAll('.danmu-item[data-comment-id="' + cid + '"]');
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].remove();
+        }
+        renderDanmuManageList();
+    }
+
+    function formatDanmuTime(seconds) {
+        var total = Math.max(0, Math.floor(Number(seconds) || 0));
+        var m = Math.floor(total / 60);
+        var s = total % 60;
+        return (m < 10 ? "0" + m : String(m)) + ":" + (s < 10 ? "0" + s : String(s));
+    }
+
+    function renderDanmuManageList() {
+        var panel = document.getElementById("danmuManagePanel");
+        if (!panel || !danmuManageList) return;
+
+        var removable = danmuItems.filter(function (item) {
+            return item && item.canDelete && item.id != null;
+        });
+        removable.sort(function (a, b) {
+            var diff = (b.time || 0) - (a.time || 0);
+            if (diff !== 0) return diff;
+            return Number(b.id) - Number(a.id);
+        });
+
+        danmuManageList.innerHTML = "";
+        if (!removable.length) {
+            panel.style.display = "none";
+            return;
+        }
+
+        panel.style.display = "block";
+        for (var i = 0; i < removable.length; i++) {
+            var item = removable[i];
+            var row = document.createElement("div");
+            row.className = "danmu-manage-row";
+
+            var meta = document.createElement("div");
+            meta.className = "danmu-manage-meta";
+
+            var timeNode = document.createElement("span");
+            timeNode.className = "danmu-manage-time";
+            timeNode.textContent = formatDanmuTime(item.time);
+
+            var textNode = document.createElement("span");
+            textNode.className = "danmu-manage-text";
+            textNode.textContent = item.text;
+
+            var delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className = "danmu-manage-del";
+            delBtn.textContent = "删除";
+            delBtn.addEventListener("click", (function (id) {
+                return function () {
+                    deleteDanmu(id);
+                };
+            })(item.id));
+
+            meta.appendChild(timeNode);
+            meta.appendChild(textNode);
+            row.appendChild(meta);
+            row.appendChild(delBtn);
+            danmuManageList.appendChild(row);
         }
     }
 
@@ -391,11 +831,13 @@
     }
 
     function startDanmuLoop() {
+        setDanmuAnimationPlayState("running");
         if (danmuTimer) return;
         danmuTimer = setInterval(tickDanmu, 120);
     }
 
     function stopDanmuLoop() {
+        setDanmuAnimationPlayState("paused");
         if (!danmuTimer) return;
         clearInterval(danmuTimer);
         danmuTimer = null;
@@ -404,9 +846,11 @@
     function initDanmuSystem() {
         danmuVideo = document.getElementById("videoPlayer");
         danmuLayer = document.getElementById("danmuLayer");
+        danmuManageList = document.getElementById("danmuManageList");
         if (!danmuVideo || !danmuLayer) return;
 
         resetDanmuStateByTime(danmuVideo.currentTime || 0);
+        renderDanmuManageList();
 
         danmuVideo.addEventListener("play", startDanmuLoop);
         danmuVideo.addEventListener("pause", stopDanmuLoop);
@@ -630,11 +1074,19 @@
             if (!ensureLogin(d)) return;
             ui.toast(d.message || (d.success ? "弹幕发送成功" : "弹幕发送失败"), !d.success);
             if (d.success) {
-                var newDanmu = { id: Date.now(), time: time, text: content };
+                var serverCommentId = d && d.commentId ? Number(d.commentId) : NaN;
+                var hasServerCommentId = !isNaN(serverCommentId) && serverCommentId > 0;
+                var newDanmu = {
+                    id: hasServerCommentId ? serverCommentId : Date.now(),
+                    time: time,
+                    text: content,
+                    canDelete: hasServerCommentId
+                };
                 danmuItems.push(newDanmu);
                 danmuItems.sort(function (a, b) { return a.time - b.time; });
                 danmuEmitted[newDanmu.id] = true;
                 renderDanmuItem(newDanmu);
+                renderDanmuManageList();
                 input.value = "";
             }
         }).catch(function () { ui.toast("请求失败", true); });
@@ -702,6 +1154,17 @@
                     }
                 }).catch(function () { ui.toast("请求失败", true); });
         }, "删除确认");
+    }
+
+    function deleteDanmu(commentId) {
+        postForm("${pageContext.request.contextPath}/video/deleteComment", { commentId: commentId })
+            .then(function (d) {
+                if (!ensureLogin(d)) return;
+                ui.toast(d.message || (d.success ? "删除成功" : "删除失败"), !d.success);
+                if (d.success) {
+                    removeDanmuById(commentId);
+                }
+            }).catch(function () { ui.toast("请求失败", true); });
     }
 </script>
 <% } %>

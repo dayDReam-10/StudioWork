@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/client/*")//修改其他进阶功能处理20260408
+@WebServlet("/client/*")//其他进阶功能处理
 public class ClientServlet extends HttpServlet {
     private CheckInService checkInService = new CheckInServiceImpl();
     private VideoService videoService = new VideoServiceImpl();
@@ -43,6 +43,9 @@ public class ClientServlet extends HttpServlet {
                 break;
             case "/favorites":
                 showFavorites(request, response, user);
+                break;
+            case "/likes":
+                showLikes(request, response, user);
                 break;
             case "/favorite":
                 favoriteVideo(request, response, user);
@@ -187,6 +190,53 @@ public class ClientServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().write("{\"error\": \"获取收藏视频失败\"}");
+        }
+    }
+
+    // 显示点赞的视频
+    private void showLikes(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            int page = 1;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                try {
+                    page = Integer.parseInt(pageStr);
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+            List<com.assessment.www.po.Video> likedVideos = videoService.getUserLikedVideos(user.getId(), page, Constants.PAGESIZE);
+            int totalLikes = videoService.getUserLikeCount(user.getId());
+            int totalPages = (int) Math.ceil((double) totalLikes / Constants.PAGESIZE);
+
+            StringBuilder json = new StringBuilder();
+            json.append("{");
+            json.append("\"videos\": [");
+            for (int i = 0; i < likedVideos.size(); i++) {
+                if (i > 0) {
+                    json.append(",");
+                }
+                com.assessment.www.po.Video video = likedVideos.get(i);
+                json.append("{");
+                json.append("\"id\": ").append(video.getId()).append(",");
+                json.append("\"title\": \"").append(video.getTitle() != null ? video.getTitle().replace("\"", "\\\"") : "").append("\",");
+                json.append("\"coverUrl\": \"").append(video.getCoverUrl() != null ? video.getCoverUrl().replace("\"", "\\\"") : "").append("\",");
+                json.append("\"description\": \"").append(video.getDescription() != null ? video.getDescription().replace("\"", "\\\"") : "").append("\",");
+                json.append("\"viewCount\": ").append(video.getViewCount() != null ? video.getViewCount() : 0).append(",");
+                json.append("\"likeCount\": ").append(video.getLikeCount() != null ? video.getLikeCount() : 0).append(",");
+                json.append("\"coinCount\": ").append(video.getCoinCount() != null ? video.getCoinCount() : 0);
+                json.append("}");
+            }
+            json.append("],");
+            json.append("\"currentPage\": ").append(page).append(",");
+            json.append("\"totalPages\": ").append(totalPages);
+            json.append("}");
+            response.getWriter().write(json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("{\"error\": \"获取点赞视频失败\"}");
         }
     }
 

@@ -12,34 +12,240 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的视频 - LiBiLiBi</title>
     <style>
-        :root { --blue:#00aeec; --pink:#fb7299; --line:#e3e5e7; --bg:#f6f7f8; --sub:#61666d; }
+        :root {
+            --ink: #1f2a37;
+            --sub: #5f6b7a;
+            --sub2: #8a94a3;
+            --line: rgba(31, 42, 55, 0.1);
+            --paper: rgba(255, 252, 246, 0.86);
+            --panel: rgba(255, 255, 255, 0.9);
+            --gold: #b18135;
+            --teal: #2d6c8b;
+            --danger: #c44762;
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-pill: 999px;
+            --shadow-soft: 0 10px 30px rgba(24, 36, 56, 0.08);
+            --shadow-panel: 0 16px 34px rgba(16, 26, 40, 0.12);
+            --shadow-hover: 0 18px 34px rgba(18, 28, 45, 0.14);
+        }
+
         * { box-sizing: border-box; }
-        body { margin:0; font-family:"Segoe UI",sans-serif; color:#18191c; background:var(--bg); }
-        .header { height:68px; background:#fff; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:0 24px; }
-        .logo { color:var(--blue); text-decoration:none; font-size:24px; font-weight:800; }
-        .nav a { text-decoration:none; color:var(--sub); margin-left:12px; font-size:14px; }
-        .nav .upload { background:var(--pink); color:#fff; padding:8px 12px; border-radius:8px; font-weight:700; }
-        .main { width:min(1200px,100%); margin:22px auto; padding:0 20px; }
-        .top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-        .top h1 { margin:0; font-size:24px; }
-        .msg { border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:14px; }
-        .msg.error { background:#fff2f4; border:1px solid #ffd7e2; color:#d63b6f; }
-        .msg.success { background:#ecfbff; border:1px solid #bcefff; color:#0077a5; }
-        .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
-        .card { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.05); }
-        .cover { width:100%; aspect-ratio:16/9; object-fit:cover; background:#eef1f4; display:block; cursor:pointer; }
-        .info { padding:10px 12px 12px; }
-        .title { font-size:15px; margin-bottom:8px; min-height:40px; overflow:hidden; }
-        .meta { color:#9499a0; font-size:13px; margin-bottom:10px; }
-        .status { display:inline-block; font-size:12px; border-radius:999px; padding:4px 8px; margin-bottom:10px; }
-        .status.pending { background:#fff8e8; color:#a66900; }
-        .status.ok { background:#ecfbff; color:#0077a5; }
-        .status.bad { background:#fff2f4; color:#d63b6f; }
-        .actions { display:flex; gap:8px; }
-        .btn { flex:1; border:none; border-radius:8px; height:34px; cursor:pointer; color:#fff; font-size:13px; }
-        .btn.play { background:var(--blue); }
-        .btn.del { background:#ff6b6b; }
-        .empty { text-align:center; background:#fff; border:1px dashed var(--line); border-radius:10px; padding:48px 20px; color:#9499a0; }
+
+        body {
+            margin: 0;
+            font-family: "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--ink);
+            background: transparent;
+        }
+
+        .header {
+            width: min(1480px, calc(100% - 48px));
+            height: 76px;
+            margin: 16px auto 0;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border-radius: 24px;
+            background: var(--paper);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(14px) saturate(130%);
+            -webkit-backdrop-filter: blur(14px) saturate(130%);
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 12px;
+            z-index: 100;
+        }
+
+        .logo {
+            text-decoration: none;
+            font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            background: linear-gradient(120deg, var(--gold) 0%, #c89d4f 45%, var(--teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--sub);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: var(--radius-pill);
+            transition: all 0.2s ease;
+        }
+
+        .nav a:hover {
+            color: var(--teal);
+            background: rgba(45, 108, 139, 0.09);
+        }
+
+        .nav .upload {
+            color: #fff;
+            font-weight: 700;
+            background: linear-gradient(120deg, var(--gold) 0%, #c89d4f 100%);
+            box-shadow: 0 10px 20px rgba(177, 129, 53, 0.3);
+            padding: 9px 16px;
+        }
+
+        .main {
+            width: min(1480px, calc(100% - 56px));
+            margin: 28px auto 36px;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .top h1 {
+            margin: 0;
+            font-size: 32px;
+            font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+        }
+
+        .msg {
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .msg.error {
+            background: rgba(196, 71, 98, 0.1);
+            border: 1px solid rgba(196, 71, 98, 0.28);
+            color: var(--danger);
+        }
+
+        .msg.success {
+            background: rgba(45, 108, 139, 0.12);
+            border: 1px solid rgba(45, 108, 139, 0.26);
+            color: var(--teal);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.84);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-panel);
+            transition: transform 0.26s ease, box-shadow 0.26s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .cover {
+            width: calc(100% - 16px);
+            margin: 8px 8px 0;
+            border-radius: 12px;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            background: #eef1f4;
+            display: block;
+            cursor: pointer;
+        }
+
+        .info { padding: 12px 14px 14px; }
+
+        .title {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            min-height: 42px;
+            overflow: hidden;
+        }
+
+        .meta {
+            color: var(--sub2);
+            font-size: 12px;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .status {
+            display: inline-block;
+            font-size: 12px;
+            border-radius: var(--radius-pill);
+            padding: 4px 9px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .status.pending { background: rgba(177, 129, 53, 0.14); color: #8d6126; }
+        .status.ok { background: rgba(45, 108, 139, 0.14); color: var(--teal); }
+        .status.bad { background: rgba(196, 71, 98, 0.14); color: var(--danger); }
+
+        .actions { display: flex; gap: 8px; }
+
+        .btn {
+            flex: 1;
+            border: none;
+            border-radius: var(--radius-md);
+            height: 36px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .btn.play { background: linear-gradient(120deg, var(--teal), #3a86a9); }
+        .btn.del { background: linear-gradient(120deg, #c44762, #e06b84); }
+
+        .empty {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px dashed rgba(177, 129, 53, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 50px 20px;
+            color: var(--sub2);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .empty a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        @media (max-width: 980px) {
+            .header {
+                width: calc(100% - 28px);
+                height: auto;
+                padding: 14px 16px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .main {
+                width: calc(100% - 24px);
+                margin: 22px auto 30px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/libilibi-bg.css">
 </head>
@@ -115,7 +321,7 @@
     <% } else { %>
     <div class="empty">
         你还没有投稿视频。<br>
-        <a href="${pageContext.request.contextPath}/video/upload" style="color:#00aeec;text-decoration:none;">立即上传</a>
+        <a href="${pageContext.request.contextPath}/video/upload">立即上传</a>
     </div>
     <% } %>
 </main>
