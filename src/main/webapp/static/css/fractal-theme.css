@@ -1,0 +1,589 @@
+﻿:root {
+    --ft-bg: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    --ft-glass-bg: rgba(255, 255, 255, 0.5);
+    --ft-text: #1a1a1a;
+    --ft-text-muted: #555555;
+    --ft-primary: #3b82f6;
+    --ft-primary-hover: #2563eb;
+    --ft-radius: 16px;
+    --ft-radius-sm: 8px;
+    --ft-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    --ft-shadow-hover: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+    --ft-line: rgba(255, 255, 255, 0.4);
+    --ft-glass-border: rgba(255, 255, 255, 0.6);
+    --ft-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color-scheme: light;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    background-attachment: fixed;
+    color: var(--ft-text);
+    min-height: 100vh;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(216, 241, 230, 0.8) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(200, 228, 255, 0.8) 0%, transparent 40%);
+    z-index: -1;
+}
+
+.container::before, .container::after, body::after {
+    display: none !important;
+}
+
+.container {
+    width: min(1200px, 95vw);
+    margin: 0 auto;
+    padding: 20px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.navbar, .header {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--ft-glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--ft-shadow);
+}
+
+.nav-links a, .header a {
+    color: var(--ft-text);
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    transition: color var(--ft-transition);
+}
+
+.nav-links a:hover, .header a:hover {
+    color: var(--ft-primary);
+}
+
+.video-card, .card, .history-item, .favorite-item {
+    background: var(--ft-glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--ft-radius);
+    border: 1px solid var(--ft-glass-border);
+    box-shadow: var(--ft-shadow);
+    overflow: hidden;
+    transition: transform var(--ft-transition), box-shadow var(--ft-transition);
+}
+
+.video-card:hover, .card:hover, .history-item:hover, .favorite-item:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--ft-shadow-hover);
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.video-cover, .history-cover, .favorite-cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-color: rgba(255,255,255,0.2);
+    border-bottom: 1px solid var(--ft-glass-border);
+    transition: transform var(--ft-transition);
+}
+
+.video-card:hover .video-cover {
+    transform: scale(1.05);
+}
+
+.video-cover-wrapper {
+    overflow: hidden;
+}
+
+.video-info, .history-info, .favorite-info {
+    padding: 15px;
+    background: transparent;
+    position: relative;
+    z-index: 2;
+}
+
+.video-title, .history-title, .favorite-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.video-meta, .history-time, .favorite-time {
+    font-size: 0.85rem;
+    color: var(--ft-text-muted);
+}
+
+button, .btn, .search-btn, .upload-btn, .login-btn {
+    background: var(--ft-primary);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--ft-radius-sm);
+    font-weight: 500;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: background-color var(--ft-transition), transform var(--ft-transition);
+}
+
+button:hover, .btn:hover {
+    background: var(--ft-primary-hover);
+    transform: translateY(-2px);
+}
+
+input, select, textarea {
+    padding: 10px 15px;
+    border: 1px solid var(--ft-line);
+    border-radius: var(--ft-radius-sm);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
+    color: var(--ft-text);
+    transition: border-color var(--ft-transition), background var(--ft-transition);
+    box-sizing: border-box;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--ft-primary);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}/* 重点突出显示欢迎字样 */
+.welcome-user {
+    font-weight: 800;
+    font-size: 1.15rem;
+    background: linear-gradient(135deg, #1e3a8a, #db2777, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    animation: glowText 3s ease-in-out infinite alternate;
+    margin-right: 15px;
+    display: inline-block;
+}
+
+@keyframes glowText {
+    0% { filter: drop-shadow(0 0 2px rgba(219, 39, 119, 0.2)); }
+    100% { filter: drop-shadow(0 0 6px rgba(219, 39, 119, 0.6)); }
+}
+
+/* 各个子页面的大面板、容器等也都融入毛玻璃风格 */
+.main-container, .upload-container, .profile-container, .admin-container, 
+.login-box, .register-box, .detail-container, .content-container, .comment-section, .video-player-container, .sidebar, .exhibition-card, table.data-table {
+    background: var(--ft-glass-bg) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-radius: var(--ft-radius-lg) !important;
+    border: 1px solid var(--ft-glass-border) !important;
+    box-shadow: var(--ft-shadow) !important;
+    padding: 20px;
+    margin-bottom: 25px;
+    transition: transform var(--ft-transition), box-shadow var(--ft-transition);
+}
+
+.sidebar {
+    padding: 15px !important;
+}
+
+/* 列表行、表格行、评论行、侧边栏选项等适配轻微毛玻璃材质 */
+.comment-item, .history-item, .favorite-item, .table-row, tbody tr, .menu-item, .sidebar a {
+    background: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(8px);
+    border-radius: var(--ft-radius-sm);
+    border: 1px solid rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.comment-item:hover, .history-item:hover, .favorite-item:hover, tbody tr:hover, .menu-item:hover, .sidebar a:hover {
+    background: rgba(255, 255, 255, 0.6) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* 让原本可能存在的白色实体背景变透明 */
+.content, .main-content, .layout-main {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* 重点突出显示欢迎字样 */
+.welcome-user {
+    font-weight: 800;
+    font-size: 1.15rem;
+    background: linear-gradient(135deg, #1e3a8a, #db2777, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    animation: glowText 3s ease-in-out infinite alternate;
+    margin-right: 15px;
+    display: inline-block;
+}
+
+@keyframes glowText {
+    0% { filter: drop-shadow(0 0 2px rgba(219, 39, 119, 0.2)); }
+    100% { filter: drop-shadow(0 0 6px rgba(219, 39, 119, 0.6)); }
+}
+
+/* 各个子页面的大面板、容器等也都融入毛玻璃风格 */
+.main-container, .upload-container, .profile-container, .admin-container, 
+.login-box, .register-box, .detail-container, .content-container, .comment-section, .video-player-container, .sidebar, .exhibition-card, table.data-table {
+    background: var(--ft-glass-bg) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-radius: var(--ft-radius-lg) !important;
+    border: 1px solid var(--ft-glass-border) !important;
+    box-shadow: var(--ft-shadow) !important;
+    padding: 20px;
+    margin-bottom: 25px;
+    transition: transform var(--ft-transition), box-shadow var(--ft-transition);
+}
+
+.sidebar {
+    padding: 15px !important;
+}
+
+/* 列表行、表格行、评论行、侧边栏选项等适配轻微毛玻璃材质 */
+.comment-item, .history-item, .favorite-item, .table-row, tbody tr, .menu-item, .sidebar a {
+    background: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(8px);
+    border-radius: var(--ft-radius-sm);
+    border: 1px solid rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.comment-item:hover, .history-item:hover, .favorite-item:hover, tbody tr:hover, .menu-item:hover, .sidebar a:hover {
+    background: rgba(255, 255, 255, 0.6) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* 让原本可能存在的白色实体背景变透明 */
+.content, .main-content, .layout-main {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+
+/* 强制覆盖原有的所有白色字体，避免与毛玻璃背景融为一体 */
+.nav-links a, .header a, .video-title, .video-meta, .welcome-user, h1, h2, h3, h4, span, div, p, table, th, td, a {
+    color: var(--ft-text);
+}
+
+.nav-links a, .header a {
+    color: var(--ft-text) !important;
+}
+
+.nav-links a:hover, .header a:hover {
+    color: var(--ft-primary) !important;
+}
+
+.header {
+    color: var(--ft-text) !important;
+}
+
+/* 重新修复欢迎字样 (避免background-clip把胶囊背景吞掉) */
+.welcome-user {
+    font-weight: 800 !important;
+    font-size: 1.15rem !important;
+    color: #1e3a8a !important; /* 采用深蓝色保证可读性 */
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+    display: inline-block !important;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8) !important;
+    
+    /* 移除有问题的渐变clip导致背景丢失问题 */
+    -webkit-background-clip: border-box !important;
+    -webkit-text-fill-color: initial !important;
+    animation: bounceHover 3s ease-in-out infinite alternate;
+}
+
+@keyframes bounceHover {
+    0% { transform: translateY(0); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    100% { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+}
+
+/* 按钮强制白字，使其在深色或彩色底色上保证对比度 */
+button, .btn, .search-btn, .upload-btn, .login-btn {
+    color: #ffffff !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2) !important;
+}
+
+/* 保证输入框等文字清晰 */
+input, select, textarea {
+    color: #1a1a1a !important;
+}
+
+/* 强制覆盖原有的所有白色字体，避免与毛玻璃背景融为一体 */
+.nav-links a, .header a, .video-title, .video-meta, .welcome-user, h1, h2, h3, h4, span, div, p, table, th, td, a {
+    color: var(--ft-text);
+}
+
+.nav-links a, .header a {
+    color: var(--ft-text) !important;
+}
+
+.nav-links a:hover, .header a:hover {
+    color: var(--ft-primary) !important;
+}
+
+.header {
+    color: var(--ft-text) !important;
+}
+
+/* 重新修复欢迎字样 (避免background-clip把胶囊背景吞掉) */
+.welcome-user {
+    font-weight: 800 !important;
+    font-size: 1.15rem !important;
+    color: #1e3a8a !important; /* 采用深蓝色保证可读性 */
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+    display: inline-block !important;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8) !important;
+    
+    /* 移除有问题的渐变clip导致背景丢失问题 */
+    -webkit-background-clip: border-box !important;
+    -webkit-text-fill-color: initial !important;
+    animation: bounceHover 3s ease-in-out infinite alternate;
+}
+
+@keyframes bounceHover {
+    0% { transform: translateY(0); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    100% { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+}
+
+/* 按钮强制白字，使其在深色或彩色底色上保证对比度 */
+button, .btn, .search-btn, .upload-btn, .login-btn {
+    color: #ffffff !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2) !important;
+}
+
+/* 保证输入框等文字清晰 */
+input, select, textarea {
+    color: #1a1a1a !important;
+}
+/* 修复过滤标签按钮在未选中时的背景和文字颜色问题 */
+button, .btn, .search-btn, .upload-btn, .login-btn {
+    /* 解除对所有button的粗暴一刀切，让特殊类的按钮有自己的颜色 */
+}
+
+.filter-btn, .filter-tab {
+    background: rgba(255, 255, 255, 0.6) !important;
+    color: #333333 !important;
+    text-shadow: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+.filter-btn:hover, .filter-tab:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: var(--ft-primary) !important;
+}
+
+.filter-btn.active, .filter-tab.active {
+    background: var(--ft-primary) !important;
+    color: #ffffff !important;
+    border-color: var(--ft-primary) !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2) !important;
+}
+/* 修复过滤标签按钮在未选中时的背景和文字颜色问题 */
+button, .btn, .search-btn, .upload-btn, .login-btn {
+    /* 解除对所有button的粗暴一刀切，让特殊类的按钮有自己的颜色 */
+}
+
+.filter-btn, .filter-tab {
+    background: rgba(255, 255, 255, 0.6) !important;
+    color: #333333 !important;
+    text-shadow: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+.filter-btn:hover, .filter-tab:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: var(--ft-primary) !important;
+}
+
+.filter-btn.active, .filter-tab.active {
+    background: var(--ft-primary) !important;
+    color: #ffffff !important;
+    border-color: var(--ft-primary) !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2) !important;
+}
+/* 修复部分内联样式导致的白字白底问题（如签到模块硬编码的 color: white） */
+h4[style*="color: white"], p[style*="color: white"] {
+    color: var(--ft-text) !important;
+}
+
+#checkin-status-text {
+    color: var(--ft-text-muted) !important;
+    font-weight: 500;
+}
+
+/* 顺便美化一下签到按钮 */
+#checkin-btn {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2) !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+#checkin-btn:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+#checkin-btn:disabled, #checkin-btn[disabled] {
+    background: #e5e7eb !important;
+    color: #9ca3af !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+}
+/* 修复部分内联样式导致的白字白底问题（如签到模块硬编码的 color: white） */
+h4[style*="color: white"], p[style*="color: white"] {
+    color: var(--ft-text) !important;
+}
+
+#checkin-status-text {
+    color: var(--ft-text-muted) !important;
+    font-weight: 500;
+}
+
+/* 顺便美化一下签到按钮 */
+#checkin-btn {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2) !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+#checkin-btn:hover:not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+#checkin-btn:disabled, #checkin-btn[disabled] {
+    background: #e5e7eb !important;
+    color: #9ca3af !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+}
+/* 修复回复评论按钮及输入框字体颜色 */
+.reply-btn, button.reply-btn {
+    color: var(--ft-text) !important;
+}
+
+.reply-btn:hover, button.reply-btn:hover {
+    color: var(--ft-primary) !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+}
+
+.reply-btn.delete-btn {
+    color: #ef4444 !important;
+}
+
+.reply-btn.delete-btn:hover {
+    color: #dc2626 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* 修复回复弹出的表单按钮字体颜色 */
+.reply-submit, .reply-cancel {
+    color: #ffffff !important;
+}
+
+.reply-cancel {
+    background: #6b7280 !important;
+}
+.reply-cancel:hover {
+    background: #4b5563 !important;
+}
+
+/* 次级评论也需要保持毛玻璃并处理字体 */
+.replies {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-left: 2px solid var(--ft-primary) !important;
+}
+/* 修复回复评论按钮及输入框字体颜色 */
+.reply-btn, button.reply-btn {
+    color: var(--ft-text) !important;
+}
+
+.reply-btn:hover, button.reply-btn:hover {
+    color: var(--ft-primary) !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+}
+
+.reply-btn.delete-btn {
+    color: #ef4444 !important;
+}
+
+.reply-btn.delete-btn:hover {
+    color: #dc2626 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* 修复回复弹出的表单按钮字体颜色 */
+.reply-submit, .reply-cancel {
+    color: #ffffff !important;
+}
+
+.reply-cancel {
+    background: #6b7280 !important;
+}
+.reply-cancel:hover {
+    background: #4b5563 !important;
+}
+
+/* 次级评论也需要保持毛玻璃并处理字体 */
+.replies {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-left: 2px solid var(--ft-primary) !important;
+}
