@@ -42,9 +42,9 @@ public class VideoStreamServlet extends HttpServlet {
 
         String rangeHeader = request.getHeader("Range");
         if (rangeHeader == null) {
-            response.setContentLengthLong(fileLength);
-            try (InputStream in = new BufferedInputStream(new FileInputStream(videoFile), BUFFER_SIZE);
-                 OutputStream out = response.getOutputStream()) {
+            response.setContentLength((int) fileLength);
+            OutputStream out = response.getOutputStream();
+            try (InputStream in = new BufferedInputStream(new FileInputStream(videoFile), BUFFER_SIZE)) {
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int bytesRead;
                 while ((bytesRead = in.read(buffer)) != -1) {
@@ -85,7 +85,7 @@ public class VideoStreamServlet extends HttpServlet {
 
         long contentLength = end - start + 1;
         response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-        response.setContentLengthLong(contentLength);
+        response.setContentLength((int) contentLength);
         response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
 
         try (RandomAccessFile raf = new RandomAccessFile(videoFile, "r")) {
